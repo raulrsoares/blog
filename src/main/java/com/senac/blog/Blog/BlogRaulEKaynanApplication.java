@@ -1,0 +1,11 @@
+package com.senac.blog.Blog;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class BlogRaulEKaynanApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(BlogRaulEKaynanApplication.class, args);
+    }
+}
