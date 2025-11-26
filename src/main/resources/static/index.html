@@ -3,165 +3,51 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Blog - Senac</title>
-		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-		<style>
-			.nao-publicado {
-				background-color: #fff3cd;
-			}
-			.card {
-				transition: all 0.2s;
-			}
-			.card:hover {
-				transform: translateY(-5px);
-				box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
-			}
-		</style>
+		<title>Blog</title>
+		<link rel="stylesheet" href="css/index.css" />
 	</head>
-	<body class="bg-light d-flex flex-column min-vh-100">
-		<header class="container mt-5">
-			<h1 class="text-center mb-4 text-primary">Blog do Senac</h1>
-			<div class="text-center mb-4">
-				<button class="btn btn-success btn-lg shadow-sm" data-bs-toggle="modal" data-bs-target="#modalForm">Nova Publicação</button>
-			</div>
+
+	<body>
+		<header>
+			<h1>Blog</h1>
+			<button class="btn" onclick="abrirForm()">Nova Publicação</button>
 		</header>
 
-		<main class="container flex-grow-1">
-			<div id="lista" class="row"></div>
-		</main>
-
-		<footer class="footer mt-auto py-3 bg-primary">
-			<div class="container text-center">
-				<div class="mt-2">
-					<a href="#" class="text-white mx-2 text-decoration-none">Kaynan Castro</a> |
-					<a href="#" class="text-white mx-2 text-decoration-none">Raul Rodrigues Soares</a> |
-					<a href="#" class="text-white mx-2 text-decoration-none">STADSCAS3NA</a> |
-					<a href="#" class="text-white mx-2 text-decoration-none">2025</a>
-				</div>
-			</div>
-		</footer>
-		<div class="modal fade" id="modalForm" tabindex="-1" aria-labelledby="tituloModal" aria-hidden="true">
-			<div class="modal-dialog modal-lg">
-				<div class="modal-content">
-					<div class="modal-header bg-primary text-white">
-						<h5 class="modal-title" id="tituloModal">Nova Publicação</h5>
-						<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
-					</div>
-					<div class="modal-body">
-						<form id="form">
-							<input type="hidden" id="id" />
-							<div class="mb-3">
-								<label for="titulo" class="form-label">Título</label>
-								<input type="text" class="form-control" id="titulo" required minlength="5" />
-							</div>
-							<div class="mb-3">
-								<label for="autor" class="form-label">Autor</label>
-								<input type="text" class="form-control" id="autor" required />
-							</div>
-							<div class="mb-3">
-								<label for="data" class="form-label">Data de publicação</label>
-								<input type="date" class="form-control" id="data" required />
-							</div>
-							<div class="mb-3">
-								<label for="texto" class="form-label">Texto</label>
-								<textarea class="form-control" rows="6" id="texto" required minlength="10"></textarea>
-							</div>
-						</form>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-						<button type="button" class="btn btn-primary" onclick="salvar()">Salvar</button>
-					</div>
+		<div id="modal-backdrop">
+			<div id="form-box">
+				<h2 id="tituloForm">Nova Publicação</h2>
+				<input type="hidden" id="id" />
+				<label>Título</label> <input type="text" id="titulo" required minlength="5" /> <label>Autor</label> <input type="text" id="autor" required />
+				<label>Data de publicação</label> <input type="date" id="data" required /> <label>Texto</label>
+				<textarea id="texto" rows="6" required minlength="10"></textarea>
+				<br />
+				<div class="card-footer">
+					<button class="btn" onclick="salvar()">Salvar</button>
+					<button class="btn-outline btn-outline-danger" onclick="fecharForm()">Cancelar</button>
 				</div>
 			</div>
 		</div>
 
-		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-		<script>
-			const api = "/api/publicacoes";
+		<div id="confirm-modal-backdrop">
+			<div id="confirm-modal">
+				<h3>Confirmação de Exclusão</h3>
+				<p>Tem certeza que deseja excluir esta publicação? Esta ação é irreversível.</p>
+				<div class="button-group">
+					<button id="confirm-yes" class="btn-outline btn-outline-danger">Sim, Excluir</button>
+					<button id="confirm-no" class="btn">Cancelar</button>
+				</div>
+			</div>
+		</div>
 
-			function carregar() {
-				fetch(api)
-					.then((r) => r.json())
-					.then((dados) => {
-						const div = document.getElementById("lista");
-						div.innerHTML = "";
-						dados.forEach((p) => {
-							const publicado = new Date(p.dataPublicacao) < new Date();
-							const cardClass = publicado ? "" : "nao-publicado border-warning";
-							const badge = publicado ? "" : '<span class="badge bg-warning text-dark float-end">NÃO PUBLICADO</span>';
+		<main>
+			<div id="lista"></div>
+		</main>
 
-							div.innerHTML += `
-                    <div class="col-md-6 mb-4">
-                        <div class="card h-100 ${cardClass}">
-                            <div class="card-body">
-                                <h5 class="card-title">${p.titulo} ${badge}</h5>
-                                <p class="card-text"><strong>Autor:</strong> ${p.autor}</p>
-                                <p class="card-text"><small class="text-muted">Publicado em: ${new Date(p.dataPublicacao).toLocaleDateString(
-																	"pt-BR"
-																)}</small></p>
-                                <p class="card-text">${p.texto}</p>
-                            </div>
-                            <div class="card-footer bg-white text-end">
-                                <button class="btn btn-sm btn-outline-primary" onclick="editar(${
-																	p.id
-																})" data-bs-toggle="modal" data-bs-target="#modalForm">Alterar</button>
-                                <button class="btn btn-sm btn-outline-danger" onclick="excluir(${p.id})">Excluir</button>
-                            </div>
-                        </div>
-                    </div>`;
-						});
-					});
-			}
+		<footer>
+			<a href="#" class="footer-link">Kaynan Castro</a> | <a href="#" class="footer-link">Raul Rodrigues Soares</a> |
+			<a href="#" class="footer-link">STADSCAS3NA</a> | <a href="#" class="footer-link">2025</a>
+		</footer>
 
-			function salvar() {
-				const id = document.getElementById("id").value;
-				const obj = {
-					titulo: document.getElementById("titulo").value,
-					autor: document.getElementById("autor").value,
-					dataPublicacao: document.getElementById("data").value,
-					texto: document.getElementById("texto").value,
-				};
-
-				const metodo = id ? "PUT" : "POST";
-				const url = id ? api + "/" + id : api;
-
-				fetch(url, { method: metodo, headers: { "Content-Type": "application/json" }, body: JSON.stringify(obj) })
-					.then(() => {
-						carregar();
-						bootstrap.Modal.getInstance(document.getElementById("modalForm")).hide();
-						limpar();
-					})
-					.catch(() => alert("Erro ao salvar – verifica os campos!"));
-			}
-
-			function editar(id) {
-				fetch(api + "/" + id)
-					.then((r) => r.json())
-					.then((p) => {
-						document.getElementById("id").value = p.id;
-						document.getElementById("titulo").value = p.titulo;
-						document.getElementById("autor").value = p.autor;
-						const data = new Date(p.dataPublicacao).toISOString().split("T")[0];
-						document.getElementById("data").value = data;
-						document.getElementById("texto").value = p.texto;
-						document.getElementById("tituloModal").innerText = "Editar Publicação";
-					});
-			}
-
-			function excluir(id) {
-				if (confirm("Tem certeza que quer excluir essa publicação?")) {
-					fetch(api + "/" + id, { method: "DELETE" }).then(() => carregar());
-				}
-			}
-
-			function limpar() {
-				document.getElementById("form").reset();
-				document.getElementById("id").value = "";
-				document.getElementById("tituloModal").innerText = "Nova Publicação";
-			}
-
-			carregar();
-		</script>
+		<script src="js/index.js"></script>
 	</body>
 </html>
