@@ -9,7 +9,6 @@ let postIdToExclude = null;
 
 function abrirForm() {
 	modalBackdrop.classList.add("show");
-	formBox.classList.add("show");
 }
 
 function fecharForm() {
@@ -51,8 +50,8 @@ function carregar() {
             <p>${p.texto}</p>
 
             <div class="card-footer">
-              <button class="btn-outline btn-outline-primary" onclick="editar(${p.id})">Alterar</button>
-              <button class="btn-outline btn-outline-danger" onclick="confirmarExclusao(${p.id})">Excluir</button>
+							<button class="btn-outline btn-outline-primary" onclick="editar(${p.id})">Alterar</button>
+							<button class="btn-outline btn-outline-danger" onclick="confirmarExclusao(${p.id})">Excluir</button>
             </div>
           </div>`;
 			});

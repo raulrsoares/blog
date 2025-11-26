@@ -1,45 +1,78 @@
+html,
+body {
+	height: 100%;
+}
+
 body {
 	font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
 	background: #f5f5f5;
 	margin: 0;
 	padding: 0;
-	/* display: flex; */
-	/* flex-direction: column; */
 	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
 }
 
 header {
 	display: flex;
+	flex-direction: unset;
 	justify-content: space-between;
 	align-items: center;
+	width: 100%;
 	max-width: 900px;
 	margin: 40px auto 20px;
 	padding: 0 16px;
+	box-sizing: border-box;
 }
 
 h1 {
-	color: #0d6efd;
+	color: #111;
 	margin: 0;
 }
 
 .btn {
 	background: #111;
 	color: #fff;
-	border: 0;
+	border: none;
 	padding: 10px 16px;
 	border-radius: 8px;
 	cursor: pointer;
 	font-size: 16px;
+	transition: 0.2s;
 }
 .btn:hover {
-	opacity: 0.9;
+	opacity: 0.8;
+}
+
+.btn-outline {
+	background: transparent;
+	border: 1px solid #111;
+	color: #111;
+	padding: 6px 12px;
+	border-radius: 8px;
+	cursor: pointer;
+	transition: 0.2s;
+}
+.btn-outline:hover {
+	background: #111;
+	color: #fff;
+}
+
+.btn-outline-danger {
+	border-color: #b00020;
+	color: #b00020;
+}
+.btn-outline-danger:hover {
+	background: #b00020;
+	color: #fff;
 }
 
 main {
+	flex: 1;
 	max-width: 900px;
 	margin: 0 auto;
-	flex-grow: 1;
 	padding: 0 16px;
+	box-sizing: border-box;
 }
 
 #lista {
@@ -50,21 +83,21 @@ main {
 }
 
 .card {
-	border: 1px solid #ddd;
+	border: 1px solid #ccc;
 	border-radius: 10px;
 	padding: 16px;
 	background: #fff;
-	margin-bottom: 0;
-	transition: all 0.2s;
+	transition: 0.2s;
 }
+
 .card:hover {
 	transform: translateY(-5px);
 	box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
 }
 
 .nao-publicado {
-	background: #fff9c4;
-	border: 1px solid #fbc02d;
+	background: #fff3b0;
+	border: 1px solid #e6b400;
 }
 
 .badge {
@@ -72,12 +105,13 @@ main {
 	padding: 2px 8px;
 	font-size: 12px;
 	border-radius: 999px;
-	border: 1px solid #999;
+	border: 1px solid #555;
 }
+
 .badge-nao-publicado {
 	background: #ffe082;
-	border-color: #fbc02d;
 	color: #5d4037;
+	border-color: #e6b400;
 }
 
 .card-footer {
@@ -85,75 +119,54 @@ main {
 	margin-top: 10px;
 }
 
-.btn-outline {
-	background: transparent;
-	border: 1px solid #111;
-	padding: 6px 12px;
+input,
+textarea {
+	width: 100%;
+	padding: 10px;
+	margin: 8px 0;
 	border-radius: 8px;
-	cursor: pointer;
-}
-.btn-outline-danger {
-	border-color: #b00020;
-	color: #b00020;
-}
-.btn-outline-primary {
-	border-color: #0d6efd;
-	color: #0d6efd;
+	border: 1px solid #bbb;
+	font-size: 16px;
+	box-sizing: border-box;
+	gap: 10px;
 }
 
-#modal-backdrop {
+#modal-backdrop,
+#confirm-modal-backdrop {
 	display: none;
-	position: unset;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	background-color: rgba(0, 0, 0, 0.5);
+	position: fixed;
+	inset: 0;
+	background: rgba(0, 0, 0, 0.6);
 	z-index: 100;
 	justify-content: center;
 	align-items: center;
 }
 
+#modal-backdrop.show,
+#confirm-modal-backdrop.show {
+	display: flex;
+}
+
 #form-box {
-	display: none;
 	max-width: 800px;
 	width: 90%;
 	padding: 20px;
 	background: #fff;
 	border-radius: 10px;
-	border: 1px solid #ddd;
+	border: 1px solid #ccc;
 	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-	z-index: 101;
 	transform: scale(0.9);
 	opacity: 0;
-	transition: all 0.3s ease-out;
-	flex-wrap: nowrap;
-	align-items: center;
-}
-
-#modal-backdrop.show {
-	display: flex;
-	position: fixed;
+	transition: 0.3s ease-out;
+	display: none;
+	flex-direction: column;
+	box-sizing: border-box;
 }
 
 #modal-backdrop.show #form-box {
 	display: flex;
-	flex-direction: column;
 	transform: scale(1);
 	opacity: 1;
-}
-
-#confirm-modal-backdrop {
-	display: none;
-	position: unset;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	background-color: rgba(0, 0, 0, 0.7);
-	z-index: 200;
-	justify-content: center;
-	align-items: center;
 }
 
 #confirm-modal {
@@ -162,16 +175,11 @@ main {
 	padding: 20px;
 	background: #fff;
 	border-radius: 10px;
-	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 	text-align: center;
 	transform: scale(0.9);
 	opacity: 0;
-	transition: all 0.3s ease-out;
-}
-
-#confirm-modal-backdrop.show {
-	display: flex;
-	position: fixed;
+	transition: 0.3s ease-out;
+	box-sizing: border-box;
 }
 
 #confirm-modal-backdrop.show #confirm-modal {
@@ -185,26 +193,20 @@ main {
 	justify-content: space-around;
 }
 
-input,
-textarea {
-	width: 100%;
-	padding: 10px;
-	margin: 8px 0;
-	border-radius: 8px;
-	border: 1px solid #ccc;
-	font-size: 16px;
-}
-
 footer {
-	background: #0d6efd;
+	background: #111;
 	padding: 20px;
 	text-align: center;
 	color: #fff;
 	margin-top: auto;
 }
 
-a.footer-link {
-	color: white;
+.footer-link {
+	color: #fff;
 	text-decoration: none;
 	margin: 0 6px;
+}
+
+.footer-link:hover {
+	text-decoration: underline;
 }
