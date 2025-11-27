@@ -58,7 +58,7 @@ function carregar() {
 		});
 }
 
-function salvar() {
+async function salvar() {
 	const id = document.getElementById("id").value;
 	const obj = {
 		titulo: document.getElementById("titulo").value,
@@ -70,32 +70,84 @@ function salvar() {
 	const metodo = id ? "PUT" : "POST";
 	const url = id ? api + "/" + id : api;
 
-	fetch(url, {
-		method: metodo,
-		headers: { "Content-Type": "application/json" },
-		body: JSON.stringify(obj),
-	})
-		.then(() => {
-			carregar();
-			fecharForm();
-		})
-		.catch((error) => console.error("Erro ao salvar:", error));
+	try {
+		const response = await fetch(url, {
+			method: metodo,
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify(obj),
+		});
+
+		if (!response.ok) {
+			const errorJson = await response.json().catch(() => null);
+			if (errorJson?.errors) {
+				const mensagens = errorJson.errors.map((e) => `<p>${e.defaultMessage}</p>`).join("");
+				throw new Error(mensagens);
+			}
+			throw new Error(errorJson?.message || "Erro ao salvar a publicação");
+		}
+
+		mostrarMensagem("Publicação salva com sucesso!", "sucesso");
+		carregar();
+		fecharForm();
+	} catch (error) {
+		console.error("Erro ao salvar:", error);
+		mostrarMensagem(error.message, "erro");
+	}
 }
 
-function editar(id) {
-	fetch(api + "/" + id)
-		.then((r) => r.json())
-		.then((p) => {
-			document.getElementById("id").value = p.id;
-			document.getElementById("titulo").value = p.titulo;
-			document.getElementById("autor").value = p.autor;
-			document.getElementById("data").value = new Date(p.dataPublicacao).toISOString().split("T")[0];
-			document.getElementById("texto").value = p.texto;
+async function editar(id) {
+	try {
+		const response = await fetch(api + "/" + id);
 
-			document.getElementById("tituloForm").innerText = "Editar Publicação";
-			abrirForm();
-		})
-		.catch((error) => console.error("Erro ao carregar para edição:", error));
+		if (!response.ok) {
+			const errorJson = await response.json().catch(() => null);
+			if (errorJson?.errors) {
+				const mensagens = errorJson.errors.map((e) => e.defaultMessage).join("");
+				throw new Error(mensagens);
+			}
+			throw new Error(errorJson?.message || "Erro ao carregar publicação");
+		}
+
+		const p = await response.json();
+
+		document.getElementById("id").value = p.id;
+		document.getElementById("titulo").value = p.titulo;
+		document.getElementById("autor").value = p.autor;
+		document.getElementById("data").value = new Date(p.dataPublicacao).toISOString().split("T")[0];
+		document.getElementById("texto").value = p.texto;
+
+		document.getElementById("tituloForm").innerText = "Editar Publicação";
+
+		mostrarMensagem("Publicação carregada para edição.", "sucesso");
+		abrirForm();
+	} catch (error) {
+		console.error("Erro ao editar:", error);
+		mostrarMensagem(error.message, "erro");
+	}
+}
+
+async function excluir(id) {
+	try {
+		const response = await fetch(api + "/" + id, {
+			method: "DELETE",
+		});
+
+		if (!response.ok) {
+			const errorJson = await response.json().catch(() => null);
+			if (errorJson?.errors) {
+				const mensagens = errorJson.errors.map((e) => e.defaultMessage).join("");
+				throw new Error(mensagens);
+			}
+			throw new Error(errorJson?.message || "Erro ao excluir a publicação");
+		}
+
+		mostrarMensagem("Publicação excluída com sucesso!", "sucesso");
+		carregar();
+		fecharConfirmacao();
+	} catch (error) {
+		console.error("Erro ao excluir:", error);
+		mostrarMensagem(error.message, "erro");
+	}
 }
 
 function abrirConfirmacao(id) {
@@ -112,15 +164,6 @@ function confirmarExclusao(id) {
 	abrirConfirmacao(id);
 }
 
-function excluir(id) {
-	fetch(api + "/" + id, { method: "DELETE" })
-		.then(() => {
-			carregar();
-			fecharConfirmacao();
-		})
-		.catch((error) => console.error("Erro ao excluir:", error));
-}
-
 confirmYesBtn.addEventListener("click", function () {
 	if (postIdToExclude) {
 		excluir(postIdToExclude);
@@ -133,6 +176,17 @@ confirmBackdrop.addEventListener("click", function (event) {
 		fecharConfirmacao();
 	}
 });
+
+function mostrarMensagem(texto, tipo) {
+	const msg = document.getElementById("mensagem");
+	msg.innerHTML = texto;
+	msg.className = "mensagem " + tipo;
+	msg.style.display = "block";
+
+	setTimeout(() => {
+		msg.style.display = "none";
+	}, 20000);
+}
 
 function limpar() {
 	document.getElementById("id").value = "";
