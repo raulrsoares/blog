@@ -43,11 +43,11 @@ function carregar() {
 				const badge = publicado ? "" : '<span class="badge badge-nao-publicado">NÃO PUBLICADO</span>'; // Uso de += para evitar sobrescrever o innerHTML em cada iteração (mais rápido)
 
 				listaDiv.innerHTML += `
-          <div class="card ${publicado ? "" : "nao-publicado"}">
+          <div class="card ${publicado ? "" : "nao-publicado"}" id="${p.id}">
             <h3>${p.titulo} ${badge}</h3>
             <p><strong>Autor:</strong> ${p.autor}</p>
             <p><strong>Publicado em:</strong> ${new Date(p.dataPublicacao).toLocaleDateString("pt-BR")}</p>
-            <p>${p.texto}</p>
+            <p class="texto">${p.texto}</p>
 
             <div class="card-footer">
 							<button class="btn-outline btn-outline-primary" onclick="editar(${p.id})">Alterar</button>

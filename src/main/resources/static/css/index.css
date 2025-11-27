@@ -117,12 +117,27 @@ main {
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
-	min-height: 350px;
+
+	height: 400px;
+	overflow: hidden;
+}
+
+.card p.texto {
+	overflow-y: auto;
+	max-height: 350px;
+	padding-right: 6px;
 }
 
 .card:hover {
 	transform: translateY(-5px);
 	box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+}
+
+.card-footer {
+	margin-top: auto;
+	display: flex;
+	justify-content: flex-end;
+	gap: 10px;
 }
 
 .nao-publicado {
@@ -144,14 +159,6 @@ main {
 	border-color: #e6b400;
 }
 
-.card-footer {
-	display: flex;
-	justify-content: flex-end;
-	gap: 10px;
-	text-align: right;
-	margin-top: 20px;
-}
-
 input,
 textarea {
 	width: 100%;
@@ -162,6 +169,11 @@ textarea {
 	font-size: 16px;
 	box-sizing: border-box;
 	gap: 10px;
+}
+
+textarea {
+	resize: vertical;
+	max-height: 400px;
 }
 
 #modal-backdrop,
@@ -231,7 +243,7 @@ footer {
 	padding: 20px;
 	text-align: center;
 	color: #fff;
-	margin-top: auto;
+	margin-top: 20px;
 }
 
 .footer-link {
