@@ -11,7 +11,7 @@ public class Publicacao {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "O título é obrigatório")
+    @NotBlank(message = "O Título é obrigatório")
     @Size(min = 5, max = 100, message = "Título deve ter entre 5 e 100 caracteres")
     private String titulo;
 
