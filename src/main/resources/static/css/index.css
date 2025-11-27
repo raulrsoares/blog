@@ -118,6 +118,7 @@ main {
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
+	max-width: 425px;
 
 	height: 400px;
 	overflow: hidden;
